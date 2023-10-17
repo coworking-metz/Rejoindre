@@ -55,6 +55,8 @@ onMounted(() => {
     api.post('nouvelle-visite', payload).then(response => {
         console.log(response);
         data.loading = false;
+        rejoindreStore.visite=null;
+        rejoindreStore.user={};
     })
 });
 const rejoindreStore = useRejoindreStore();
