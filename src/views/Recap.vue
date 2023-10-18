@@ -1,9 +1,9 @@
 <template>
-    <Base fond="/images/pouce.jpg" logo="false">
+    <Base fond="/images/pouce.jpg">
     <template #breadcrumbs>
-        <li><router-link to="/">Informations</router-link></li>
-        <li><router-link to="/visite">Rendez-vous</router-link></li>
-        <li><router-link to="/mot-de-passe">Création de compte</router-link></li>
+        <li><router-link to="/visite">Visite</router-link></li>
+        <li><router-link to="/infos">Informations</router-link></li>
+        <!-- <li><router-link to="/mot-de-passe">Création de compte</router-link></li> -->
         <li>Récapitulatif</li>
     </template>
 
@@ -55,8 +55,8 @@ onMounted(() => {
     api.post('nouvelle-visite', payload).then(response => {
         console.log(response);
         data.loading = false;
-        rejoindreStore.visite=null;
-        rejoindreStore.user={};
+        // rejoindreStore.visite=null;
+        // rejoindreStore.user={};
     })
 });
 const rejoindreStore = useRejoindreStore();

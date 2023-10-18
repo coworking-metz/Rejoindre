@@ -1,20 +1,29 @@
 <template>
-    <Base fond="/images/visite.jpg" logo="false">
+    <Base fond="/images/visite.jpg">
     <template #breadcrumbs>
-        <li><router-link to="/">Informations</router-link></li>
-        <li>Rendez-vous</li>
+        <li>Visite</li>
     </template>
 
     <hgroup>
         <h1>Votre visite</h1>
-        <h2>Avant de pouvoir utiliser l'espace, vous devez réaliser une visite.</h2>
+        <h2>Choisissez une date dans le liste ci-dessous pour effectuer votre visite du coworking. Un membre de l'assocation vous acceuillera et vous présentera le lieu et son fonctionnement.
+        </h2>
     </hgroup>
-    <form @submit.prevent="submitForm">
-        <label>Date
+    <small>Les visites ont lieu uniquement les <b>mardi</b> à <b>10h</b>.</small>
+    <div class="days">
+        <template v-for="day in data.days">
+            <button class="day" @click="choisir(day)">
+                <span class="nom">{{ day.nom }}</span>
+                <span class="jour">{{ day.jour }}</span>
+                <span class="mois">{{ day.mois }}</span>
+            </button>
+        </template>
+    </div>
+    <!-- <label>Date
             <input type="datetime-local" ref="dateInput" v-model="data.visite" @focus="choisir" @click="choisir">
             <small>Les visites ont lieu uniquement les <b>lundi</b> et <b>mardi</b> à 10h.</small>
-        </label>
-
+        </label> -->
+    <form @submit.prevent="submitForm" v-if="data.visite">
         <p>
             <center>Vous avez choisi le <kbd>{{ recap }}</kbd></center>
         </p>
@@ -30,28 +39,25 @@ import { useRouter } from 'vue-router';
 
 const rejoindreStore = useRejoindreStore();
 const router = useRouter();
-const dateInput = ref(null);
 
 
 const data = reactive({
     visite: null,
+    days: []
 })
 
 watch(() => data.visite, (newDate, oldDate) => {
-    dateInput.value.setCustomValidity('');
     if (newDate) {
         const dateObj = new Date(newDate);
         dateObj.setHours(10, 0, 0, 0);
         if (dateObj <= new Date()) {
-            dateInput.value.setCustomValidity("La date doit être dans le futur.");
-            dateInput.value.reportValidity();
+            // dateInput.value.setCustomValidity("La date doit être dans le futur.");
             data.visite = oldDate; // revert to old value
             return;
         }
         const dayOfWeek = dateObj.getDay();
         if (dayOfWeek !== 1 && dayOfWeek !== 2) {
-            dateInput.value.setCustomValidity("Les visites ont lieu les lundi et mardi à 10h.");
-            dateInput.value.reportValidity();
+            // dateInput.value.setCustomValidity("Les visites ont lieu les lundi et mardi à 10h.");
             data.visite = oldDate; // revert to old value
             return;
         }
@@ -60,7 +66,8 @@ watch(() => data.visite, (newDate, oldDate) => {
 
 
 onMounted(() => {
-    data.visite = getNextDate();
+    // data.visite = getNextDate();
+    data.days = getNextTuesdays();
 })
 
 const recap = computed(() => {
@@ -72,15 +79,13 @@ const recap = computed(() => {
     });
     return date;
 })
-function choisir() {
-    setTimeout(() => {
-        dateInput.value.showPicker()
-    }, 50);
 
+function choisir(day) {
+    data.visite = day.date
 }
 function submitForm() {
     rejoindreStore.visite = data.visite;
-    router.push('/mot-de-passe')
+    router.push('/infos')
 }
 
 function getNextDate() {
@@ -106,6 +111,53 @@ function getNextDate() {
     console.log(formattedDate)
     return formattedDate;
 }
+function getNextTuesdays(nb = 12) {
+    const tuesdays = [];
+    let currentDate = new Date();
+    currentDate.setHours(10);
+    currentDate.setMinutes(0);
+    const frenchMonths = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+
+    // Création de l'objet Intl.DateTimeFormat pour obtenir le nom du jour en français
+    const dateFormatter = new Intl.DateTimeFormat('fr-FR', { weekday: 'long' });
+
+    while (tuesdays.length < nb) {
+        currentDate.setDate(currentDate.getDate() + 1);
+
+        if (currentDate.getDay() === 2) {
+            tuesdays.push({
+                date: new Date(currentDate),
+                jour: currentDate.getDate(),
+                mois: frenchMonths[currentDate.getMonth()],
+                nom: dateFormatter.format(currentDate) // Ajout du nom du jour
+            });
+        }
+    }
+
+    return tuesdays;
+}
+
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.days {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .5rem;
+    padding: 1rem 0;
+
+    .day {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        font-size: .6rem;
+
+        .jour {
+            font-size: 1rem;
+        }
+
+        .mois {}
+    }
+}
+</style>

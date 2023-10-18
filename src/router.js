@@ -4,8 +4,12 @@ export default createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: "/",
+      path: "/infos",
       component: () => import("@/views/Rejoindre.vue"),
+    },
+    {
+      path: "/",
+      component: () => import("@/views/Visite.vue"),
     },
     {
       path: "/visite",

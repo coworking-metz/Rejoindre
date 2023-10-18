@@ -1,12 +1,13 @@
 <template>
     <Base>
     <template #breadcrumbs>
+        <li><router-link to="/visite">Visite</router-link></li>
         <li>Informations</li>
     </template>
 
     <hgroup>
-        <h1>Nous rejoindre</h1>
-        <h2>Entrez vos informations pour commencer la démarche</h2>
+        <h1>Qui êtes-vous ?</h1>
+        <h2>Entrez les informations utiles pour votre visite</h2>
     </hgroup>
     <form @submit.prevent="submitForm">
         <label>
@@ -90,7 +91,8 @@ function submitForm() {
     rejoindreStore.user = Object.assign({}, data.user);
 
 
-    router.push('/visite')
+    // router.push('/mot-de-passe')
+    router.push('/recap')
 }
 </script>
 
