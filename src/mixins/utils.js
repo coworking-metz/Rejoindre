@@ -50,3 +50,12 @@ export function generateICS(eventName, eventSlug, eventDate, endDate = false) {
 }
 
 // Utilisation de la fonction
+
+export function joinFrench(array) {
+  if (array.length === 0) return "";
+  if (array.length === 1) return array[0];
+
+  const initialElements = array.slice(0, -1).join(", ");
+  const lastElement = array.slice(-1);
+  return `${initialElements} et ${lastElement}`;
+}

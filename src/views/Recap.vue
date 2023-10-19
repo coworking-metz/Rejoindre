@@ -1,5 +1,5 @@
 <template>
-    <Base fond="/images/pouce.jpg">
+    <Base fond="/images/salle-collab.jpg">
     <template #breadcrumbs>
         <li><router-link to="/visite">Visite</router-link></li>
         <li><router-link to="/infos">Informations</router-link></li>

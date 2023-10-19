@@ -12,23 +12,24 @@
     <form @submit.prevent="submitForm">
         <label>
             Adresse e-mail
-            <input type="email" ref="email" v-model="data.user.email" placeholder="E-mail" aria-label="Mail"
-                autocomplete="email" required />
+            <input type="email" ref="email" v-model="data.user.email" placeholder="E-mail"
+                aria-label="Mail" autocomplete="email" required />
         </label>
         <label>
             Nom
-            <input type="text" v-model="data.user.nom" placeholder="Nom de famille" aria-label="Nom" autocomplete="name"
-                required />
+            <input type="text" v-model="data.user.nom" placeholder="Nom de famille" aria-label="Nom"
+                autocomplete="name" required />
         </label>
         <label>
             Prénom
-            <input type="text" v-model="data.user.prenom" placeholder="Prénom(s)" aria-label="Prénom" autocomplete="name"
-                required />
+            <input type="text" v-model="data.user.prenom" placeholder="Prénom(s)" aria-label="Prénom"
+                autocomplete="name" required />
         </label>
         <fieldset>
             <label>
                 <input ref="cgu" type="checkbox" role="switch" v-model="data.cgu" />
-                J'ai lu et compris <a href="https://www.coworking-metz.fr/nous-rejoindre/" target="_blank">les
+                J'ai lu et compris <a href="https://www.coworking-metz.fr/nous-rejoindre/"
+                    target="_blank">les
                     conditions d'accès et d'utilisation de notre espace de Coworking</a>
             </label>
         </fieldset>
@@ -67,11 +68,11 @@ onMounted(() => {
 let sti;
 function checkUserExists() {
     clearTimeout(sti);
-    if (!email) return;
     sti = setTimeout(() => {
-
+        if (!email.value) return;
         if (data.user.email) {
             api.get('user-exists', { email: data.user.email }).then(response => {
+                if (!email.value) return;
                 if (response.exists) {
                     email.value.setCustomValidity('Vous ne pouvez pas utiliser cette adresse car elle est utiliséé  par un de nos adhérents')
                 } else {
@@ -96,4 +97,5 @@ function submitForm() {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
