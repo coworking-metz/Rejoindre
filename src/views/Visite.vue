@@ -148,11 +148,13 @@ function getNextDays(days, monthsLimit = 12, exclude = []) {
 <style lang="scss" scoped>
 .days {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: .5rem;
     padding: 1rem 0;
+    justify-items: center;
 
     .day {
+
         &.selected {
             background-color: black;
             color: white;
@@ -169,11 +171,12 @@ function getNextDays(days, monthsLimit = 12, exclude = []) {
             opacity: 0;
         }
 
-        padding: 0;
+        padding: .5rem 0;
         margin: 0;
         display: flex;
         flex-direction: column;
         font-size: .6rem;
+        justify-content: center;
 
         .jour {
             font-size: 1rem;

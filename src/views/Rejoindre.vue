@@ -13,7 +13,10 @@
         <label>
             Adresse e-mail
             <input type="email" ref="email" v-model="data.user.email" placeholder="E-mail"
-                aria-label="Mail" autocomplete="email" required />
+                aria-label="Mail" autocomplete="email" required :aria-invalid="data.emailInvalide" />
+            <small v-if="data.emailInvalideMessage" style="color:var(--del-color)">{{
+                data.emailInvalideMessage
+            }}</small>
         </label>
         <label>
             Nom
@@ -57,6 +60,8 @@ const data = reactive({
         prenom: import.meta.env.VITE_TEST_PRENOM,
         email: import.meta.env.VITE_TEST_EMAIL
     },
+    emailInvalide: null,
+    emailInvalideMessage: '',
     cgu: false
 })
 watch(() => data.user.email, (n, o) => {
@@ -67,6 +72,8 @@ onMounted(() => {
 })
 let sti;
 function checkUserExists() {
+    data.emailInvalideMessage = ''
+    data.emailInvalide = null;
     clearTimeout(sti);
     sti = setTimeout(() => {
         if (!email.value) return;
@@ -74,9 +81,10 @@ function checkUserExists() {
             api.get('user-exists', { email: data.user.email }).then(response => {
                 if (!email.value) return;
                 if (response.exists) {
-                    email.value.setCustomValidity('Vous ne pouvez pas utiliser cette adresse car elle est utiliséé  par un de nos adhérents')
+                    data.emailInvalide = true;
+                    data.emailInvalideMessage = 'Cette adresse est déjà utiliséé par un de nos adhérents.'
                 } else {
-                    email.value.setCustomValidity('')
+                    data.emailInvalide = false;
                 }
             })
         }
