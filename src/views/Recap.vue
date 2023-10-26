@@ -16,7 +16,8 @@
     <template v-else>
         <hgroup>
             <h1>Demande enregistrée !</h1>
-            <h2>Votre rendez-vous du <strong>{{ dateVisite }}</strong> est validé. Vous allez recevoir un e-mail
+            <h2>Votre rendez-vous du <strong>{{ dateVisite }}</strong> est validé. Vous allez recevoir
+                un e-mail
                 récapitulatif.<br>
             </h2>
         </hgroup>
@@ -52,6 +53,13 @@ onMounted(() => {
         visite: rejoindreStore.visite,
         user: rejoindreStore.user,
     }
+
+    BrevoConversations('updateIntegrationData', {
+        email: payload.email,
+        firstName: payload.prenom,
+        lastName: payload.nom
+    });
+
     api.post('nouvelle-visite', payload).then(response => {
         console.log(response);
         data.loading = false;
@@ -71,4 +79,5 @@ const dateVisite = computed(() => {
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

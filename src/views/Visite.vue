@@ -102,7 +102,6 @@ function submitForm() {
 }
 
 function getNextDays(days, monthsLimit = 12, exclude = []) {
-    console.log(JSON.stringify(days), monthsLimit, exclude);
     const result = [];
     let currentDate = new Date();
     const time = visites.horaire.split(':');
@@ -173,10 +172,11 @@ function getNextDays(days, monthsLimit = 12, exclude = []) {
 
         padding: .5rem 0;
         margin: 0;
-        display: flex;
-        flex-direction: column;
         font-size: .6rem;
-        justify-content: center;
+
+        >* {
+            display: block;
+        }
 
         .jour {
             font-size: 1rem;

@@ -30,13 +30,13 @@
         </label>
         <fieldset>
             <label>
-                <input ref="cgu" type="checkbox" role="switch" v-model="data.cgu" />
+                <input ref="cgu" type="checkbox" _role="switch" required v-model="data.cgu" />
                 J'ai lu et compris <a href="https://www.coworking-metz.fr/nous-rejoindre/"
                     target="_blank">les
                     conditions d'accès et d'utilisation de notre espace de Coworking</a>
             </label>
         </fieldset>
-        <button type="submit" class="contrast">Continuer</button>
+        <button :aria-busy="data.loading" type="submit" class="contrast">Continuer</button>
     </form>
     </Base>
 </template>
@@ -60,15 +60,18 @@ const data = reactive({
         prenom: import.meta.env.VITE_TEST_PRENOM,
         email: import.meta.env.VITE_TEST_EMAIL
     },
+    loading: false,
     emailInvalide: null,
     emailInvalideMessage: '',
     cgu: false
 })
 watch(() => data.user.email, (n, o) => {
-    checkUserExists()
+    // checkUserExists()
 });
 onMounted(() => {
-    checkUserExists();
+    // cgu.value.setCustomValidity(`Vous devez lire et accepter les conditions d'accès pour continuer.`);
+
+    // checkUserExists();
 })
 let sti;
 function checkUserExists() {
@@ -78,6 +81,7 @@ function checkUserExists() {
     sti = setTimeout(() => {
         if (!email.value) return;
         if (data.user.email) {
+            data.loading = true;
             api.get('user-exists', { email: data.user.email }).then(response => {
                 if (!email.value) return;
                 if (response.exists) {
@@ -86,17 +90,19 @@ function checkUserExists() {
                 } else {
                     data.emailInvalide = false;
                 }
+            }).finally(() => {
+                data.loading = false;
             })
         }
     }, 500);
 }
 function submitForm() {
-    if (!data.cgu) {
-        cgu.value.setCustomValidity(`Vous devez lire et accepter les conditions d'accès pour continuer.`);
-        cgu.value.reportValidity();
+    // cgu.value.setCustomValidity(`Vous devez lire et accepter les conditions d'accès pour continuer.`);
+    // if (!data.cgu) {
+    //     cgu.value.reportValidity();
 
-        return;
-    }
+    //     return;
+    // }
     rejoindreStore.user = Object.assign({}, data.user);
 
 
