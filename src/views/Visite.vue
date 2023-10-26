@@ -17,11 +17,13 @@
     <template v-else>
 
         <hgroup>
-            <h1>Votre visite</h1>
+            <h1>Votre rendez-vous</h1>
             <h2>Choisissez une date dans le liste ci-dessous pour effectuer votre visite du coworking.
                 Un
                 membre de l'assocation vous acceuillera et vous présentera le lieu et son
-                fonctionnement.
+                fonctionnement. Vous pourrez ensuite à effectuer une journée d'essai gratuite
+                obligatoire
+                le jour même.
             </h2>
         </hgroup>
         <small>Les visites ont lieu uniquement les <b>{{ jours_de_visites }}</b> à
