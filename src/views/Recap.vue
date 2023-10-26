@@ -57,7 +57,8 @@ onMounted(() => {
     BrevoConversations('updateIntegrationData', {
         email: payload.email,
         firstName: payload.prenom,
-        lastName: payload.nom
+        lastName: payload.nom,
+        visite: payload.visite
     });
 
     api.post('nouvelle-visite', payload).then(response => {
