@@ -55,9 +55,9 @@ onMounted(() => {
     }
 
     BrevoConversations('updateIntegrationData', {
-        email: payload.email,
-        firstName: payload.prenom,
-        lastName: payload.nom,
+        email: payload.user.email,
+        firstName: payload.user.prenom,
+        lastName: payload.user.nom,
         visite: payload.visite
     });
 

@@ -97,6 +97,7 @@ function checkUserExists() {
     }, 500);
 }
 function submitForm() {
+    data.loading = true;
     // cgu.value.setCustomValidity(`Vous devez lire et accepter les conditions d'accès pour continuer.`);
     // if (!data.cgu) {
     //     cgu.value.reportValidity();
