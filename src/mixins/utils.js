@@ -27,7 +27,7 @@ export function generateICS(eventName, eventSlug, eventDate, endDate = false) {
     formattedEndDate = formatDateToICS(defaultEndDate);
   }
 
-  const content = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nDTSTART:${formattedStartDate}\r\nDTEND:${formattedEndDate}\r\nSUMMARY:${eventName}\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`;
+  const content = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nDTSTART:${formattedStartDate}\r\nDTEND:${formattedEndDate}\r\nLOCATION:7, avenue de Blida, 57000 Metz\r\nSUMMARY:${eventName}\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`;
 
   // Créer un blob à partir du contenu
   const blob = new Blob([content], { type: "text/calendar" });
