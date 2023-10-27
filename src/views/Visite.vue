@@ -5,11 +5,8 @@
     </template>
     <template v-if="settings.get('visites').fermer_visites">
         <hgroup>
-            <h1>Visite suspendues</h1>
-            <h2>Il n'est pour l'instant plus possible de prendre rendez-vous pour rejoindre le coworking
-                et faire une visite. Nous sommes désolé pour le désagrément.<br>Vous pouvez envoyer un
-                mail à <a href="mailto:contact@coworking-metz.fr">contact@coworking-metz.fr</a> si vous
-                avez des questions et pour être tenu informé de la réouverture des visites.
+            <h1>{{ settings.mention('visite', 'titre_closed') }}</h1>
+            <h2 v-html="settings.mention('visite', 'texte_closed')" class="pre">
             </h2>
         </hgroup>
 
@@ -17,13 +14,8 @@
     <template v-else>
 
         <hgroup>
-            <h1>Votre rendez-vous</h1>
-            <h2>Choisissez une date dans le liste ci-dessous pour effectuer votre visite du coworking.
-                Un
-                membre de l'assocation vous acceuillera et vous présentera le lieu et son
-                fonctionnement. Vous pourrez ensuite à effectuer une journée d'essai gratuite
-                obligatoire
-                le jour même.
+            <h1>{{ settings.mention('visite', 'titre') }}</h1>
+            <h2 v-html="settings.mention('visite', 'texte')" class="pre">
             </h2>
         </hgroup>
         <small>Les visites ont lieu uniquement les <b>{{ jours_de_visites }}</b> à

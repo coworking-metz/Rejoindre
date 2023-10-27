@@ -15,10 +15,9 @@
     </section>
     <template v-else>
         <hgroup>
-            <h1>Demande enregistrée !</h1>
-            <h2>Votre rendez-vous du <strong>{{ dateVisite }}</strong> est validé. Vous allez recevoir
-                un e-mail
-                récapitulatif.<br>
+            <h1>{{ settings.mention('recap', 'titre') }}</h1>
+            <h2 v-html="settings.mention('recap', 'texte').replaceAll('{date_visite}', dateVisite)"
+                class="pre">
             </h2>
         </hgroup>
         <strong>
@@ -32,11 +31,13 @@
 </template>
 
 <script setup>
+import { useSettingsStore } from '@/stores/settings'
 import { useRejoindreStore } from '@/stores/rejoindre'
 import { reactive, onMounted, watch, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { generateICS } from '@/mixins/utils';
 import { useApi } from '@/mixins/api';
+const settings = useSettingsStore()
 
 const data = reactive({
     loading: true

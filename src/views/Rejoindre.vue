@@ -6,8 +6,8 @@
     </template>
 
     <hgroup>
-        <h1>Qui êtes-vous ?</h1>
-        <h2>Entrez les informations utiles pour votre visite</h2>
+        <h1>{{ settings.mention('infos', 'titre') }}</h1>
+        <h2 v-html="settings.mention('infos', 'texte')" class="pre"></h2>
     </hgroup>
     <form @submit.prevent="submitForm">
         <label>
@@ -42,6 +42,7 @@
 </template>
 
 <script setup>
+import { useSettingsStore } from '@/stores/settings'
 import { useRejoindreStore } from '@/stores/rejoindre'
 import { reactive, watch, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -52,6 +53,7 @@ const api = useApi();
 const email = ref(null);
 const cgu = ref(null);
 const rejoindreStore = useRejoindreStore();
+const settings = useSettingsStore()
 const router = useRouter();
 
 const data = reactive({

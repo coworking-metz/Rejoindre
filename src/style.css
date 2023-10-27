@@ -164,3 +164,7 @@ article div:nth-of-type(2) .logo {
 body>footer {
   padding: 1rem 0;
 }
+
+.pre {
+  white-space: pre-wrap;
+}
