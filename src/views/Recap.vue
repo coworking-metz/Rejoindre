@@ -62,7 +62,7 @@ onMounted(() => {
         visite: payload.visite
     });
 
-    api.post('nouvelle-visite', payload).then(response => {
+    api.post('nouvelle-visite?' + Math.random(), payload).then(response => {
         console.log(response);
         data.loading = false;
         // rejoindreStore.visite=null;
