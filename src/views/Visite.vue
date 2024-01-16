@@ -158,18 +158,21 @@ function getNextDays(days, monthsLimit = 12, exclude = []) {
             background-image: linear-gradient(45deg, #fefefe 25%, #eeeeee 25%, #eeeeee 50%, #fefefe 50%, #fefefe 75%, #eeeeee 75%, #eeeeee 100%);
             background-size: 56.57px 56.57px;
             background-repeat: repeat;
+            overflow: hidden;
 
             &:after {
-                content: 'Complet';
+                content: "Complet";
                 position: absolute;
-                top: 50%;
-                left: 50%;
+                top: 23%;
+                left: 23%;
                 transform-origin: center;
                 transform: translate(-50%, -50%) rotate(-45deg);
                 background-color: #ff2f00;
                 color: white;
-                font-family: monospace;
-                padding: .2rem .8rem;
+                font-family: sans-serif;
+                text-transform: uppercase;
+                font-size: 0.4rem;
+                padding: 0.2rem 2rem;
             }
         }
 
