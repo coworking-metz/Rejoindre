@@ -23,7 +23,8 @@
                 scolaires</template>.</small>
         <div class="days">
             <template v-for="day in data.days">
-                <button class="day" :class="{ 'selected': day.date == data.selected }">
+                <button class="day" :class="{ 'selected': day.date == data.selected }"
+                    :disabled="day.visites >= data.max">
                     <input type="radio" :value="day.date" v-model="data.selected">
                     <span class="nom">{{ day.nom }}</span>
                     <span class="jour">{{ day.jour }}</span>
@@ -58,10 +59,10 @@ const settings = useSettingsStore()
 const router = useRouter();
 
 const visites = settings.get('visites');
-
 const data = reactive({
     days: [],
-    selected: null
+    selected: null,
+    max: 4
 })
 
 const jours_de_visites = computed(() => {
@@ -122,7 +123,8 @@ function getNextDays(days, monthsLimit = 12, exclude = []) {
                 date: new Date(currentDate),
                 jour: currentDate.getDate(),
                 mois: frenchMonths[currentDate.getMonth()],
-                nom: dateFormatter.format(currentDate) // Ajout du nom du jour
+                nom: dateFormatter.format(currentDate), // Ajout du nom du jour,
+                visites: visites.dates[currentDateString] || 0
             });
         }
 
@@ -138,7 +140,7 @@ function getNextDays(days, monthsLimit = 12, exclude = []) {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .days {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -147,6 +149,42 @@ function getNextDays(days, monthsLimit = 12, exclude = []) {
     justify-items: center;
 
     .day {
+        position: relative;
+
+        &[disabled] {
+            color: #555;
+            border-color: #333;
+            background-image: linear-gradient(45deg, #fefefe 25%, #eeeeee 25%, #eeeeee 50%, #fefefe 50%, #fefefe 75%, #eeeeee 75%, #eeeeee 100%);
+            background-size: 56.57px 56.57px;
+            background-repeat: repeat;
+
+            &:after {
+                content: 'Complet';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform-origin: center;
+                transform: translate(-50%, -50%) rotate(-45deg);
+                background-color: #ff2f00;
+                color: white;
+                font-family: monospace;
+                padding: .2rem .8rem;
+            }
+        }
+
+        // &:not([data-visites="0"]):before {
+        //     position: absolute;
+        //     content: attr(data-visites);
+        //     top: 0;
+        //     right: 0;
+        //     width: 1.1rem;
+        //     height: 1.1rem;
+        //     background-color: #ff2f00;
+        //     border-radius: 50%;
+        //     text-align: center;
+        //     line-height: 1.1rem;
+        //     transform: translate(25%, -25%);
+        // }
 
         &.selected {
             background-color: black;
