@@ -125,7 +125,7 @@ function getNextDays(days, monthsLimit = 12, exclude = []) {
                 jour: currentDate.getDate(),
                 mois: frenchMonths[currentDate.getMonth()],
                 nom: dateFormatter.format(currentDate), // Ajout du nom du jour,
-                visites: visites.dates[currentDateString] || 0
+                visites: visites.dates ? visites.dates[currentDateString] || 0 : 0
             });
         }
 
