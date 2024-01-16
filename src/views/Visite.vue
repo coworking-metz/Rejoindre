@@ -24,6 +24,7 @@
         <div class="days">
             <template v-for="day in data.days">
                 <button class="day" :class="{ 'selected': day.date == data.selected }"
+                    :title="day.visites + ' visite' + (day.visites > 1 ? 's' : '') + ' ce jour'"
                     :disabled="day.visites >= data.max">
                     <input type="radio" :value="day.date" v-model="data.selected">
                     <span class="nom">{{ day.nom }}</span>
