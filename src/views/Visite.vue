@@ -25,7 +25,7 @@
             <template v-for="day in data.days">
                 <button class="day" :class="{ 'selected': day.date == data.selected }"
                     :title="day.visites + ' visite' + (day.visites > 1 ? 's' : '') + ' ce jour'"
-                    :disabled="day.visites >= data.max">
+                    :disabled="day.visites >= visites.limite_visites_jour">
                     <input type="radio" :value="day.date" v-model="data.selected">
                     <span class="nom">{{ day.nom }}</span>
                     <span class="jour">{{ day.jour }}</span>
@@ -62,8 +62,7 @@ const router = useRouter();
 const visites = settings.get('visites');
 const data = reactive({
     days: [],
-    selected: null,
-    max: 4
+    selected: null
 })
 
 const jours_de_visites = computed(() => {
