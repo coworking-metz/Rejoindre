@@ -61,7 +61,6 @@ onMounted(() => {
         lastName: payload.user.nom,
         visite: payload.visite
     });
-
     api.get('nouvelle-visite', { payload: JSON.stringify(payload) }).then(response => {
         console.log(response);
         data.loading = false;

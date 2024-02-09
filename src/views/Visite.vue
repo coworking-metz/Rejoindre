@@ -13,26 +13,49 @@
     </template>
     <template v-else>
 
-        <hgroup>
-            <h1>{{ settings.mention('visite', 'titre') }}</h1>
-            <h2 v-html="settings.mention('visite', 'texte')" class="pre">
-            </h2>
-        </hgroup>
-        <small>Les visites ont lieu uniquement les <b>{{ jours_de_visites }}</b> à
-            <b>{{ visites.horaire }}</b><template v-if="visites.fermer_vacances"> en dehors des vacances
-                scolaires</template>.</small>
-        <div class="days">
-            <template v-for="day in data.days">
-                <button class="day" :class="{ 'selected': day.date == data.selected }"
-                    :title="day.visites + ' visite' + (day.visites > 1 ? 's' : '') + ' ce jour'"
-                    :disabled="day.visites >= visites.limite_visites_jour">
-                    <input type="radio" :value="day.date" v-model="data.selected">
-                    <span class="nom">{{ day.nom }}</span>
-                    <span class="jour">{{ day.jour }}</span>
-                    <span class="mois">{{ day.mois }}</span>
-                </button>
-            </template>
-        </div>
+        <template v-if="data.choixJour">
+            <hgroup>
+                <h3>{{ settings.mention('visite', 'titre_manuel') }}</h3>
+                <h3 v-html="settings.mention('visite', 'texte_manuel')" class="pre">
+                </h3>
+            </hgroup>
+            <label>
+                <strong>Choisissez le jour de votre visite</strong>
+                <input type="date" v-model="data.dateVisiteManuelle" @input="joursOuvres">
+                <p>Votre rendez-vous ne sera validé qu'après réception d'une confirmation
+                    de notre part.
+                </p>
+            </label>
+        </template>
+        <template v-else>
+            <hgroup>
+                <h1>{{ settings.mention('visite', 'titre') }}</h1>
+                <h2 v-html="settings.mention('visite', 'texte')" class="pre">
+                </h2>
+            </hgroup>
+
+            <small>Les visites ont lieu uniquement les <b>{{ jours_de_visites }}</b> à
+                <b>{{ visites.horaire }}</b><template v-if="visites.fermer_vacances"> en dehors des
+                    vacances
+                    scolaires</template>.</small>
+            <div class="days">
+                <template v-for="day in data.days">
+                    <button class="day" :class="{ 'selected': day.date == data.selected }"
+                        :title="day.visites + ' visite' + (day.visites > 1 ? 's' : '') + ' ce jour'"
+                        :disabled="day.visites >= visites.limite_visites_jour">
+                        <input type="radio" :value="day.date" v-model="data.selected">
+                        <span class="nom">{{ day.nom }}</span>
+                        <span class="jour">{{ day.jour }}</span>
+                        <span class="mois">{{ day.mois }}</span>
+                    </button>
+                </template>
+            </div>
+            <p>
+                <a @click="activerChoixJour" class=""><small>Si vous ne pouvez pas visiter les {{
+                    jours_de_visites }},
+                        cliquez ici</small></a>
+            </p>
+        </template>
         <!-- <label>Date
             <input type="datetime-local" ref="dateInput" v-model="data.visite" @focus="choisir" @click="choisir">
             <small>Les visites ont lieu uniquement les <b>lundi</b> et <b>mardi</b> à 10h.</small>
@@ -62,7 +85,9 @@ const router = useRouter();
 const visites = settings.get('visites');
 const data = reactive({
     days: [],
-    selected: null
+    selected: null,
+    choixJour: false,
+    dateVisiteManuelle: false
 })
 
 const jours_de_visites = computed(() => {
@@ -78,11 +103,27 @@ const jours_de_visites = computed(() => {
 onMounted(() => {
     data.visite = rejoindreStore.visite;
     data.days = getNextDays(visites.jours_de_visites, visites.limite_mois, visites.empecher_visites);
+    data.dateVisiteManuelle = getNextWorkday();
 })
 
+const dateChoisie = computed(() => {
+    let d;
+    if (data.choixJour) {
+        if (!data.dateVisiteManuelle) return;
+        d = new Date(data.dateVisiteManuelle);
+        const [hours, minutes] = visites.horaire.split(':').map(Number);
+        d.setHours(hours, minutes, 0, 0);
+    } else {
+        if (!data.selected) return;
+        d = new Date(data.selected);
+    }
+    return d;
+})
 const recap = computed(() => {
-    if (!data.selected) return;
-    let d = new Date(data.selected);
+    let d = dateChoisie.value;
+    console.log(d)
+    if (!d) return;
+
     let date = d.toLocaleDateString('fr-FR', {
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
         hour: '2-digit', minute: '2-digit'
@@ -90,12 +131,40 @@ const recap = computed(() => {
     return date;
 })
 
-
+function joursOuvres() {
+    const inputDate = new Date(data.dateVisiteManuelle);
+    const dayOfWeek = inputDate.getDay();
+    // JavaScript counts days from 0 (Sunday) to 6 (Saturday), so 0 and 6 are weekends.
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+        alert("Merci de choisir un jour ouvré.");
+        data.dateVisiteManuelle = getNextWorkday()
+    }
+}
+function activerChoixJour() {
+    data.choixJour = true;
+    console.log('ok')
+}
 function submitForm() {
-    rejoindreStore.visite = data.selected;
+    rejoindreStore.visite = dateChoisie.value;
     router.push('/infos')
 }
+function getNextWorkday() {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const dayOfWeek = tomorrow.getDay();
 
+    // If tomorrow is Saturday (6), add two more days to get to Monday
+    if (dayOfWeek === 6) {
+        tomorrow.setDate(tomorrow.getDate() + 2);
+    }
+    // If tomorrow is Sunday (0), add one more day to get to Monday
+    else if (dayOfWeek === 0) {
+        tomorrow.setDate(tomorrow.getDate() + 1);
+    }
+
+    return tomorrow.toISOString().split('T')[0];
+}
 function getNextDays(days, monthsLimit = 12, exclude = []) {
     const result = [];
     let currentDate = new Date();
