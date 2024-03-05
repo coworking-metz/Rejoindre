@@ -28,6 +28,11 @@
             <input type="text" v-model="data.user.prenom" placeholder="Prénom(s)" aria-label="Prénom"
                 autocomplete="name" required />
         </label>
+        <label>
+            Votre enreprise ou votre domaine d'activité
+            <input type="text" v-model="data.user.activite" placeholder="Entreprise ou activité"
+                aria-label="Activité" />
+        </label>
         <fieldset>
             <label>
                 <input ref="cgu" type="checkbox" _role="switch" required v-model="data.cgu" />
@@ -60,7 +65,8 @@ const data = reactive({
     user: {
         nom: import.meta.env.VITE_TEST_NOM,
         prenom: import.meta.env.VITE_TEST_PRENOM,
-        email: import.meta.env.VITE_TEST_EMAIL
+        email: import.meta.env.VITE_TEST_EMAIL,
+        activite: ''
     },
     loading: false,
     emailInvalide: null,
