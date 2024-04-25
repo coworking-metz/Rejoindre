@@ -36,7 +36,7 @@
         <fieldset>
             <label>
                 <input ref="cgu" type="checkbox" _role="switch" required v-model="data.cgu" />
-                J'ai lu et compris <a href="https://www.coworking-metz.fr/nous-rejoindre/"
+                J'ai lu et compris <a href="https://www.coworking-metz.fr/reglement-interieur/"
                     target="_blank">les
                     conditions d'accès et d'utilisation de notre espace de Coworking</a>
             </label>
