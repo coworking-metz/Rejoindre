@@ -1,9 +1,9 @@
 <template>
     <Base fond="/images/salle-collab.jpg">
     <template #breadcrumbs>
-        <li><router-link to="/visite">Visite</router-link></li>
+        <li><a href="/">Nous rejoindre</a></li>
+        <li v-if="!nomade"><router-link to="/visite">Visite</router-link></li>
         <li><router-link to="/infos">Informations</router-link></li>
-        <!-- <li><router-link to="/mot-de-passe">Création de compte</router-link></li> -->
         <li>Récapitulatif</li>
     </template>
 
@@ -14,18 +14,36 @@
         <button class="contrast" aria-busy="true">Veuillez patienter…</button>
     </section>
     <template v-else>
-        <hgroup>
-            <h1>{{ settings.mention('recap', 'titre') }}</h1>
-            <h2 v-html="settings.mention('recap', 'texte').replaceAll('{date_visite}', dateVisite)"
-                class="pre">
-            </h2>
-        </hgroup>
-        <strong>
-            <h3>Préparer votre visite</h3>
-            <button @click="calendrier">Ajouter le rendez-vous à votre calendrier</button>
-            <!-- todo app -->
+        <template v-if="nomade">
+            <hgroup>
+                <h1>{{ settings.mention('recap', 'titre_nomade') }}</h1>
+                <h2 v-html="settings.mention('recap', 'texte_nomade').replaceAll('{date_presence}', datePresence)"
+                    class="pre">
+                </h2>
+            </hgroup>
+            <strong>
+                <h3>Votre compte a été enregistré</h3>
+                <p>Merci de procéder au paiement pour finaliser votre réservation du <strong>{{ datePresence }}</strong>
+                </p>
+                <a :href="'https://www.coworking-metz.fr/boutique/ticket-journee-nomade/?al_id=' + data.user_id + '&startDate=' + rejoindreStore.user.datePresence"
+                    role="button">🛒 Passez au paiement</a>
 
-        </strong>
+            </strong>
+
+        </template>
+        <template v-else>
+            <hgroup>
+                <h1>{{ settings.mention('recap', 'titre') }}</h1>
+                <h2 v-html="settings.mention('recap', 'texte').replaceAll('{date_visite}', dateVisite)" class="pre">
+                </h2>
+            </hgroup>
+            <strong>
+                <h3>Préparer votre visite</h3>
+                <button @click="calendrier">Ajouter le rendez-vous à votre calendrier</button>
+                <!-- todo app -->
+
+            </strong>
+        </template>
     </template>
     </Base>
 </template>
@@ -40,9 +58,11 @@ import { useApi } from '@/mixins/api';
 const settings = useSettingsStore()
 
 const data = reactive({
-    loading: true
+    loading: true,
+    user_id: false
 })
 const api = useApi();
+const nomade = computed(() => !!rejoindreStore.user.nomade)
 
 function calendrier() {
     generateICS('Visite du Coworking Metz', 'visite-coworking-metz', rejoindreStore.visite);
@@ -63,6 +83,7 @@ onMounted(() => {
     });
     api.get('nouvelle-visite', { payload: JSON.stringify(payload) }).then(response => {
         console.log(response);
+        data.user_id = response.user_id;
         data.loading = false;
         // rejoindreStore.visite=null;
         // rejoindreStore.user={};
@@ -78,7 +99,13 @@ const dateVisite = computed(() => {
     });
 
 })
+const datePresence = computed(() => {
+    const d = new Date(rejoindreStore.user.datePresence);
+    return d.toLocaleDateString('fr-FR', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+})
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
