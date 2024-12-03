@@ -2,6 +2,13 @@ export function afterOneHour(codeToExecute) {
   return setTimeout(codeToExecute, 3600000); // 1 hour in milliseconds
 }
 
+export function modeTestToggle() {
+  sessionStorage.setItem('mode-test', sessionStorage.getItem('mode-test') === 'true' ? 'false' : 'true')
+  console.log('Mode test:', sessionStorage.getItem('mode-test'))
+}
+export function modeTestOn() {
+  return sessionStorage.getItem('mode-test') === 'true';
+}
 // Convertir une date au format iCalendar
 function formatDateToICS(date) {
   const d = new Date(date);

@@ -6,13 +6,15 @@
             <a href="https://www.coworking-metz.fr/faq/">FAQ</a>
             • <a href="https://www.coworking-metz.fr/reglement-interieur/">Règlement intérieur</a>
             • <a href="https://www.coworking-metz.fr/">Notre site</a>
+            • <span @click="modeTestToggle">🐔</span>
+
         </small>
 
     </footer>
 </template>
 
 <script setup>
-import { brevoOpen } from '@/mixins/utils';
+import { brevoOpen, modeTestToggle, modeTestOn } from '@/mixins/utils';
 
 </script>
 

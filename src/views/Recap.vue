@@ -14,35 +14,45 @@
         <button class="contrast" aria-busy="true">Veuillez patienter…</button>
     </section>
     <template v-else>
-        <template v-if="nomade">
+        <template v-if="!data.done">
             <hgroup>
-                <h1>{{ settings.mention('recap', 'titre_nomade') }}</h1>
-                <h2 v-html="settings.mention('recap', 'texte_nomade').replaceAll('{date_presence}', datePresence)"
-                    class="pre">
-                </h2>
+                <h1>Merci d'avoir entré vos informations</h1>
             </hgroup>
-            <strong>
-                <h3>Votre compte a été enregistré</h3>
-                <p>Merci de procéder au paiement pour finaliser votre réservation du <strong>{{ datePresence }}</strong>
-                </p>
-                <a :href="'https://www.coworking-metz.fr/boutique/ticket-journee-nomade/?al_id=' + data.user_id + '&startDate=' + rejoindreStore.user.datePresence"
-                    role="button">🛒 Passez au paiement</a>
-
-            </strong>
-
+            <button class="contrast" @click="finaliser">Finaliser la démarche</button>
         </template>
-        <template v-else>
-            <hgroup>
-                <h1>{{ settings.mention('recap', 'titre') }}</h1>
-                <h2 v-html="settings.mention('recap', 'texte').replaceAll('{date_visite}', dateVisite)" class="pre">
-                </h2>
-            </hgroup>
-            <strong>
-                <h3>Préparer votre visite</h3>
-                <button @click="calendrier">Ajouter le rendez-vous à votre calendrier</button>
-                <!-- todo app -->
 
-            </strong>
+        <template v-else>
+            <template v-if="nomade">
+                <hgroup>
+                    <h1>{{ settings.mention('recap', 'titre_nomade') }}</h1>
+                    <h2 v-html="settings.mention('recap', 'texte_nomade').replaceAll('{date_presence}', datePresence)"
+                        class="pre">
+                    </h2>
+                </hgroup>
+                <strong>
+                    <h3>Votre compte a été enregistré</h3>
+                    <p>Merci de procéder au paiement pour finaliser votre réservation du <strong>{{ datePresence
+                            }}</strong>
+                    </p>
+                    <a :href="'https://www.coworking-metz.fr/boutique/ticket-journee-nomade/?al_id=' + data.user_id + '&startDate=' + rejoindreStore.user.datePresence"
+                        role="button">🛒 Passez au paiement</a>
+
+                </strong>
+
+            </template>
+            <template v-else>
+                <hgroup>
+                    <h1>{{ settings.mention('recap', 'titre') }}</h1>
+                    <h2 v-html="settings.mention('recap', 'texte').replaceAll('{date_visite}', dateVisite)" class="pre">
+                    </h2>
+                </hgroup>
+                <strong>
+                    <h3>Préparer votre visite</h3>
+                    <button @click="calendrier">Ajouter le rendez-vous à votre calendrier</button>
+                    <!-- todo app -->
+
+                </strong>
+            </template>
         </template>
     </template>
     </Base>
@@ -55,10 +65,12 @@ import { reactive, onMounted, watch, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { generateICS } from '@/mixins/utils';
 import { useApi } from '@/mixins/api';
+import { modeTestOn } from '../mixins/utils';
 const settings = useSettingsStore()
 
 const data = reactive({
-    loading: true,
+    loading: false,
+    done: false,
     user_id: false
 })
 const api = useApi();
@@ -67,10 +79,9 @@ const nomade = computed(() => !!rejoindreStore.user.nomade)
 function calendrier() {
     generateICS('Visite du Coworking Metz', 'visite-coworking-metz', rejoindreStore.visite);
 }
-
+let payload;
 onMounted(() => {
-    data.loading = true;
-    let payload = {
+    payload = {
         visite: rejoindreStore.visite,
         user: rejoindreStore.user,
     }
@@ -81,13 +92,11 @@ onMounted(() => {
         lastName: payload.user.nom,
         visite: payload.visite
     });
-    api.get('nouvelle-visite', { payload: JSON.stringify(payload) }).then(response => {
-        console.log(response);
-        data.user_id = response.user_id;
-        data.loading = false;
-        // rejoindreStore.visite=null;
-        // rejoindreStore.user={};
-    })
+    if (modeTestOn()) {
+        console.log(JSON.parse(JSON.stringify(payload)))
+    }else {
+        finaliser()
+    }
 });
 const rejoindreStore = useRejoindreStore();
 const router = useRouter();
@@ -106,6 +115,15 @@ const datePresence = computed(() => {
     });
 
 })
+function finaliser() {
+    data.loading = true;
+    api.get('nouvelle-visite', { payload: JSON.stringify(payload) }).then(response => {
+        console.log(response);
+        data.user_id = response.user_id;
+        data.loading = false;
+        data.done = true;
+    })
+}
 </script>
 
 <style lang="scss" scoped></style>

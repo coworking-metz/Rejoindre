@@ -161,12 +161,11 @@ function submitForm() {
 
     //     return;
     // }
-    if (nomade) {
+    if (nomade.value===true) {
         data.user.nomade = true
     }
     rejoindreStore.user = Object.assign({}, data.user);
-
-    if (nomade) {
+    if (nomade.value==true) {
         router.push('/mot-de-passe')
     } else {
         router.push('/recap')
