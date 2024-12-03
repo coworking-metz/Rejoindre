@@ -1,6 +1,7 @@
 <template>
     <Base fond="/images/visite.jpg">
     <template #breadcrumbs>
+        <li><a href="/">Nous rejoindre</a></li>
         <li>Visite</li>
     </template>
     <template v-if="settings.get('visites').fermer_visites">

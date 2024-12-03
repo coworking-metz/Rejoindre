@@ -7,7 +7,7 @@ export const useSettingsStore = defineStore("settings", {
   }),
   getters: {
     ready: (state) => Object.keys(state.settings).length > 0,
-    mention: (state) => (w, key) => state.settings.mentions?.[w]?.[key] ?? '',
+    mention: (state) => (w, key) => state.settings.mentions?.[w]?.[key] ?? (w+'.'+key),
     get: (state) => (key) => state.settings[key],
   },
   actions: {

@@ -1,14 +1,14 @@
 <template>
     <Base>
     <template #breadcrumbs>
-        <li><router-link to="/visite">Visite</router-link></li>
+        <li><a href="/">Nous rejoindre</a></li>
         <li><router-link to="/infos">Informations</router-link></li>
         <li>Création de compte</li>
     </template>
 
     <hgroup>
         <h1>Votre compte</h1>
-        <h2>Pour suivre votre inscription, vous devez finaliser la création de votre compte.</h2>
+        <h2>Merci de finaliser la création de votre compte en choississant votre mot de passe.</h2>
     </hgroup>
     <form @submit.prevent="submitForm">
         <label>
