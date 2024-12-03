@@ -10,6 +10,11 @@ const router = createRouter({
     },
     {
       path: "/",
+      meta: { title: 'Nous rejoindre' },
+      component: () => import("@/views/Choix.vue"),
+    },
+    {
+      path: "/rendez-vous",
       meta: { title: 'Votre rendez-vous' },
       component: () => import("@/views/Visite.vue"),
     },
