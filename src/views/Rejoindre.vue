@@ -1,7 +1,8 @@
 <template>
     <Base>
     <template #breadcrumbs>
-        <li><router-link to="/visite">Visite</router-link></li>
+        <li><a href="/">Nous rejoindre</a></li>
+        <li v-if="!nomade"><router-link to="/visite">Visite</router-link></li>
         <li>Informations</li>
     </template>
 
@@ -10,18 +11,26 @@
         <h2 v-html="settings.mention('infos', 'texte')" class="pre"></h2>
     </hgroup>
     <form @submit.prevent="submitForm">
+        <label v-if="nomade">
+            A quelle date souhaitez vous venir ?
+            <input type="date" ref="datePresence" v-model="data.user.datePresence" placeholder="Jour ouvré"
+                aria-label="Date de présence" required :aria-invalid="data.datePresenceInvalide" />
+            <small v-if="data.datePresenceInvalideMessage" style="color:var(--del-color)">{{
+                data.datePresenceInvalideMessage
+            }}</small>
+        </label>
         <label>
             Adresse e-mail
-            <input type="email" ref="email" v-model="data.user.email" placeholder="E-mail"
-                aria-label="Mail" autocomplete="email" required :aria-invalid="data.emailInvalide" />
+            <input type="email" ref="email" v-model="data.user.email" placeholder="E-mail" aria-label="Mail"
+                autocomplete="email" required :aria-invalid="data.emailInvalide" />
             <small v-if="data.emailInvalideMessage" style="color:var(--del-color)">{{
                 data.emailInvalideMessage
             }}</small>
         </label>
         <label>
             Nom
-            <input type="text" v-model="data.user.nom" placeholder="Nom de famille" aria-label="Nom"
-                autocomplete="name" required />
+            <input type="text" v-model="data.user.nom" placeholder="Nom de famille" aria-label="Nom" autocomplete="name"
+                required />
         </label>
         <label>
             Prénom
@@ -36,8 +45,7 @@
         <fieldset>
             <label>
                 <input ref="cgu" type="checkbox" _role="switch" required v-model="data.cgu" />
-                J'ai lu et compris <a href="https://www.coworking-metz.fr/reglement-interieur/"
-                    target="_blank">les
+                J'ai lu et compris <a href="https://www.coworking-metz.fr/reglement-interieur/" target="_blank">les
                     conditions d'accès et d'utilisation de notre espace de Coworking</a>
             </label>
         </fieldset>
@@ -49,8 +57,8 @@
 <script setup>
 import { useSettingsStore } from '@/stores/settings'
 import { useRejoindreStore } from '@/stores/rejoindre'
-import { reactive, watch, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { reactive, watch, onMounted, ref, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 
 import { useApi } from '@/mixins/api';
 
@@ -60,16 +68,21 @@ const cgu = ref(null);
 const rejoindreStore = useRejoindreStore();
 const settings = useSettingsStore()
 const router = useRouter();
+const route = useRoute();
+
+const nomade = computed(() => data.user.nomade || route.query.nomade === 'true');
 
 const data = reactive({
     user: {
         nom: import.meta.env.VITE_TEST_NOM,
         prenom: import.meta.env.VITE_TEST_PRENOM,
         email: import.meta.env.VITE_TEST_EMAIL,
-        activite: ''
+        activite: '',
+        datePresence: null
     },
     loading: false,
     emailInvalide: null,
+    datePresenceInvalide: null,
     emailInvalideMessage: '',
     cgu: false
 })
@@ -77,10 +90,46 @@ watch(() => data.user.email, (n, o) => {
     // checkUserExists()
 });
 onMounted(() => {
+    setToWorkday();
     // cgu.value.setCustomValidity(`Vous devez lire et accepter les conditions d'accès pour continuer.`);
 
     // checkUserExists();
 })
+
+// Watch for changes in datePresence and validate
+watch(() => data.user.datePresence, (newDate) => {
+    if (!isWorkday(newDate)) {
+        data.datePresenceInvalide = true;
+        data.datePresenceInvalideMessage = 'Veuillez sélectionner un jour de semaine.';
+    } else {
+        data.datePresenceInvalide = false;
+        data.datePresenceInvalideMessage = '';
+    }
+});
+
+/**
+ * Check if a date is a workday (Monday to Friday).
+ * @param {string} dateStr - The date in YYYY-MM-DD format.
+ * @returns {boolean} True if the date is a workday, false otherwise.
+ */
+function isWorkday(dateStr) {
+    const date = new Date(dateStr);
+    const day = date.getDay();
+    return day !== 0 && day !== 6; // Exclude Sunday (0) and Saturday (6)
+}
+
+/**
+ * Set datePresence to the next workday if it is not a workday.
+ * @param {string} dateStr - The date in YYYY-MM-DD format.
+ */
+function setToWorkday() {
+    let date = new Date();
+    while (!isWorkday(date.toISOString().split('T')[0])) {
+        date.setDate(date.getDate() + 1); // Move to the next day
+    }
+    data.user.datePresence = date.toISOString().split('T')[0];
+}
+
 let sti;
 function checkUserExists() {
     data.emailInvalideMessage = ''
@@ -112,13 +161,17 @@ function submitForm() {
 
     //     return;
     // }
+    if (nomade) {
+        data.user.nomade = true
+    }
     rejoindreStore.user = Object.assign({}, data.user);
 
-
-    // router.push('/mot-de-passe')
-    router.push('/recap')
+    if (nomade) {
+        router.push('/mot-de-passe')
+    } else {
+        router.push('/recap')
+    }
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
