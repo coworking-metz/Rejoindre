@@ -13,7 +13,9 @@ function formatDateToICS(date) {
   const seconds = String(d.getUTCSeconds()).padStart(2, "0");
   return `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
 }
-
+export function brevoOpen() {
+  BrevoConversations('openChat', true);
+}
 // Générer le contenu du fichier ICS
 export function generateICS(eventName, eventSlug, eventDate, endDate = false) {
   const formattedStartDate = formatDateToICS(eventDate);
