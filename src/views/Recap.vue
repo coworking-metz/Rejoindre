@@ -23,12 +23,6 @@
 
         <template v-else>
             <template v-if="nomade">
-                <hgroup>
-                    <h1>{{ settings.mention('recap', 'titre_nomade') }}</h1>
-                    <h2 v-html="settings.mention('recap', 'texte_nomade').replaceAll('{date_presence}', datePresence)"
-                        class="pre">
-                    </h2>
-                </hgroup>
                 <strong>
                     <h3>Votre compte a été enregistré</h3>
                     <p>Merci de procéder au paiement pour finaliser votre réservation du <strong>{{ datePresence
@@ -94,7 +88,7 @@ onMounted(() => {
     });
     if (modeTestOn()) {
         console.log(JSON.parse(JSON.stringify(payload)))
-    }else {
+    } else {
         finaliser()
     }
 });
@@ -117,6 +111,7 @@ const datePresence = computed(() => {
 })
 function finaliser() {
     data.loading = true;
+    payload.modeTest = modeTestOn()
     api.get('nouvelle-visite', { payload: JSON.stringify(payload) }).then(response => {
         console.log(response);
         data.user_id = response.user_id;

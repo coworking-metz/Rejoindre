@@ -22,8 +22,8 @@
         </center>
     </section>
     <p>
-        <small>Votre fréquentation de notre espace de coorking implique le respect <a
-                href="https://www.coworking-metz.fr/reglement-interieur/">de notre règlement intérieur</a>. En cas de
+        <small>Votre fréquentation de notre espace de coworking implique d'avoir lu et de s'engager à <a
+                href="https://www.coworking-metz.fr/reglement-interieur/">respecter notre règlement intérieur</a>. En cas de
             question, <a @click="brevoOpen">contactez-nous via notre module de discussion</a></small>
     </p>
 
