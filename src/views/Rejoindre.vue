@@ -44,14 +44,20 @@
         </label>
         <fieldset>
             <label>
-                <input ref="cgu" type="checkbox" _role="switch" required v-model="data.cgu" />
-                J'ai lu et compris <a href="https://www.coworking-metz.fr/reglement-interieur/" target="_blank">les
-                    conditions d'accès et d'utilisation de notre espace de Coworking</a>
+                <small>
+                    <input ref="cgu" type="checkbox" _role="switch" required v-model="data.cgu" /> En cochant cette
+                    case, je
+                    confirme avoir lu <a href='https://www.coworking-metz.fr/reglement-interieur/' target='_blank'>le
+                        règlement intérieur de l'espace</a>. J'accepte également de recevoir les e-mails envoyés par
+                    l'association à propos de mon utilisation du coworking*.
+                </small>
             </label>
         </fieldset>
         <button :aria-busy="data.loading" type="submit" class="contrast">Continuer</button>
     </form>
+    <p style="font-size:.5rem">* : L'assocation Coworking Metz vous contactera par mail à l'écheance de vos abonnements ou adhésion, ains qu'une fois par trimestre dans le cadre d'un mail d'information à destination des adhérents. Nous ne vous enverrons jamais de spams ou de démarchages commerciaux, et ne procédons pas à des reventes de données personnelles.</p>
     </Base>
+
 </template>
 
 <script setup>
@@ -161,11 +167,11 @@ function submitForm() {
 
     //     return;
     // }
-    if (nomade.value===true) {
+    if (nomade.value === true) {
         data.user.nomade = true
     }
     rejoindreStore.user = Object.assign({}, data.user);
-    if (nomade.value==true) {
+    if (nomade.value == true) {
         router.push('/mot-de-passe')
     } else {
         router.push('/recap')
