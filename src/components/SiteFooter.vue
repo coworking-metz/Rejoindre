@@ -6,7 +6,7 @@
             <a href="https://www.coworking-metz.fr/faq/">FAQ</a>
             • <a href="https://www.coworking-metz.fr/reglement-interieur/">Règlement intérieur</a>
             • <a href="https://www.coworking-metz.fr/">Notre site</a>
-            • <span @click="modeTestToggle">🐔</span>
+            • <span @click="modeTestToggle">{{ emoji }}</span>
 
         </small>
 
@@ -15,7 +15,12 @@
 
 <script setup>
 import { brevoOpen, modeTestToggle, modeTestOn } from '@/mixins/utils';
+import { computed } from 'vue';
 
+const emoji = computed(() => {
+    if (sessionStorage.getItem('mode-test') === 'true') return '🤖';
+    return '🐔';
+})
 </script>
 
 <style lang="scss" scoped>
