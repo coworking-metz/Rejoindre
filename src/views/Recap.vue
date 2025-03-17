@@ -76,8 +76,12 @@ function calendrier() {
 let payload;
 onMounted(() => {
     payload = {
-        visite: rejoindreStore.visite,
         user: rejoindreStore.user,
+    }
+    if(payload.user.nomade) {
+        payload.datePresence = payload.user.datePresence;
+    } else {
+        payload.visite = rejoindreStore.visite;
     }
 
     BrevoConversations('updateIntegrationData', {

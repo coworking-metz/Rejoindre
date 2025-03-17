@@ -12,7 +12,7 @@
     </hgroup>
     <form @submit.prevent="submitForm">
         <label v-if="nomade">
-            A quelle date souhaitez vous venir ?
+            A quelle date souhaitez-vous venir ?
             <input type="date" ref="datePresence" v-model="data.user.datePresence" placeholder="Jour ouvré"
                 aria-label="Date de présence" required :aria-invalid="data.datePresenceInvalide" />
             <small v-if="data.datePresenceInvalideMessage" style="color:var(--del-color)">{{
@@ -171,11 +171,11 @@ function submitForm() {
         data.user.nomade = true
     }
     rejoindreStore.user = Object.assign({}, data.user);
-    if (nomade.value == true) {
-        router.push('/mot-de-passe')
-    } else {
+    // if (nomade.value == true) {
+    //     router.push('/mot-de-passe')
+    // } else {
         router.push('/recap')
-    }
+    // }
 }
 </script>
 
