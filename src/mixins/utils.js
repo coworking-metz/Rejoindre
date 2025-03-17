@@ -3,8 +3,11 @@ export function afterOneHour(codeToExecute) {
 }
 
 export function modeTestToggle() {
-  sessionStorage.setItem('mode-test', sessionStorage.getItem('mode-test') === 'true' ? 'false' : 'true')
-  console.log('Mode test:', sessionStorage.getItem('mode-test'))
+  sessionStorage.setItem('mode-test', sessionStorage.getItem('mode-test') !== 'false' ? 'false' : 'true')
+  console.log('Mode test:', sessionStorage.getItem('mode-test'));
+  setTimeout(() => {
+    document.location.reload();
+  }, 100)
 }
 export function modeTestOn() {
   return sessionStorage.getItem('mode-test') === 'true';
