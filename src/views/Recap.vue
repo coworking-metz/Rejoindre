@@ -26,7 +26,7 @@
                 <strong>
                     <h3>Votre compte a été enregistré</h3>
                     <p>Merci de procéder au paiement pour finaliser votre réservation du <strong>{{ datePresence
-                            }}</strong>
+                    }}</strong>
                     </p>
                     <a :href="'https://www.coworking-metz.fr/boutique/ticket-journee-nomade/?al_id=' + data.user_id + '&startDate=' + rejoindreStore.user.datePresence"
                         role="button">🛒 Passez au paiement</a>
@@ -78,7 +78,7 @@ onMounted(() => {
     payload = {
         user: rejoindreStore.user,
     }
-    if(payload.user.nomade) {
+    if (payload.user.nomade) {
         payload.datePresence = payload.user.datePresence;
     } else {
         payload.visite = rejoindreStore.visite;
@@ -116,6 +116,14 @@ const datePresence = computed(() => {
 function finaliser() {
     data.loading = true;
     payload.modeTest = modeTestOn()
+
+    trackEvent('generate_lead', {
+        value: 80.00,           // Valeur estimée du lead (optionnelle)
+        currency: 'EUR',        // Devise utilisée
+        method: 'Visite & journée d\'éssai'
+    });
+
+
     api.get('nouvelle-visite', { payload: JSON.stringify(payload) }).then(response => {
         console.log(response);
         data.user_id = response.user_id;
