@@ -35,10 +35,9 @@
                 </h2>
             </hgroup>
 
-            <small>Les visites ont lieu uniquement les <b>{{ jours_de_visites }}</b> à
-                <b>{{ visites.horaire }}</b><template v-if="visites.fermer_vacances"> en dehors des
-                    vacances
-                    scolaires</template>.</small>
+            <small>Les visites ont lieu les <b>{{ jours_de_visites }}</b> à
+                <b>{{ visites.horaire }}</b> en semaine, en dehors des jours fériés 
+                <template v-if="visites.fermer_vacances"> et des vacances scolaires</template>.</small>
             <div class="days">
                 <template v-for="day in data.days">
                     <button class="day" :class="{ 'selected': day.date == data.selected }"

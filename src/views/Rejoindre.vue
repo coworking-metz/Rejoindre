@@ -173,7 +173,7 @@ function submitForm() {
     rejoindreStore.user = Object.assign({}, data.user);
     // if (nomade.value == true) {
     //     router.push('/mot-de-passe')
-    // } else {
+    // } else {    
         router.push('/recap')
     // }
 }
