@@ -64,7 +64,12 @@
     function trackEvent(action, params = {}) {
       if (typeof gtag === 'function') {
         gtag('event', action, params);
+
       }
+    }
+
+    function trackConvertion() {
+      gtag('event', 'conversion', { 'send_to': 'AW-10896549940/ur27CPPpiqsaELTQ8Mso', 'value': 80.0, 'currency': 'EUR' });
     }
   </script>
 

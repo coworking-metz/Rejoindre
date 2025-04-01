@@ -117,13 +117,14 @@ function finaliser() {
     data.loading = true;
     payload.modeTest = modeTestOn()
 
-    trackEvent('generate_lead', {
-        value: 80.00,           // Valeur estimée du lead (optionnelle)
-        currency: 'EUR',        // Devise utilisée
-        method: 'Visite & journée d\'éssai'
-    });
+    // trackEvent('generate_lead', {
+    //     value: 80.00,           // Valeur estimée du lead (optionnelle)
+    //     currency: 'EUR',        // Devise utilisée
+    //     method: 'Visite & journée d\'éssai'
+    // });
 
-
+    trackConvertion();
+    
     api.get('nouvelle-visite', { payload: JSON.stringify(payload) }).then(response => {
         console.log(response);
         data.user_id = response.user_id;
