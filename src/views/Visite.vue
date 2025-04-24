@@ -51,9 +51,7 @@
                 </template>
             </div>
             <p>
-                <a @click="activerChoixJour" class=""><small>Si vous ne pouvez pas visiter les {{
-                    jours_de_visites }},
-                        cliquez ici</small></a>
+                <a @click="activerChoixJour" class=""><small>Si vous ne pouvez pas visiter sur ces dates ou à cet horaire, cliquez ici</small></a>
             </p>
         </template>
         <!-- <label>Date
