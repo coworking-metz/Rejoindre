@@ -36,7 +36,7 @@
             </hgroup>
 
             <small>Les visites ont lieu les <b>{{ jours_de_visites }}</b> à
-                <b>{{ visites.horaire }}</b> en semaine, en dehors des jours fériés 
+                <b>{{ visites.horaire }}</b> (hors jours fériés) 
                 <template v-if="visites.fermer_vacances"> et des vacances scolaires</template>.</small>
             <div class="days">
                 <template v-for="day in data.days">
