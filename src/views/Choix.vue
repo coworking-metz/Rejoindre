@@ -14,8 +14,7 @@
             Après cette visite, vous pourrez adhérer à notre association souscrire un abonnement.
         </small><br><br>
         <center>
-            <router-link to="/rendez-vous" role="button" class="button primary">🏢 Prendre rendez-vous pour une journée
-                d’essai</router-link>
+            <router-link to="/rendez-vous" role="button" class="button primary">🏢 Prendre rendez-vous</router-link>
         </center>
 
         <br/>
