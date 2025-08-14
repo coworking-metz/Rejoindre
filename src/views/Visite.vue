@@ -139,6 +139,7 @@ function joursOuvres() {
     }
 }
 function activerChoixJour() {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     data.choixJour = true;
     console.log('ok')
 }
