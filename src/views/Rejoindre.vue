@@ -38,10 +38,17 @@
                 autocomplete="name" required />
         </label>
         <label>
-            Votre enreprise ou votre domaine d'activité
-            <input type="text" v-model="data.user.activite" placeholder="Entreprise ou activité"
-                aria-label="Activité" />
+            {{ data.user.residentBliiida ? 'Nom de la structure résidente Bliiida' : "Votre enreprise ou votre domaine d'activité" }}
+            <input type="text" v-model="data.user.activite"
+                :placeholder="data.user.residentBliiida ? 'Nom de la structure' : 'Entreprise ou activité'"
+                :aria-label="data.user.residentBliiida ? 'Nom de la structure résidente Bliiida' : 'Activité'"
+                :required="data.user.residentBliiida" />
         </label>
+        <small class="resident-bliiida">
+            <a v-if="!data.user.residentBliiida" href="#" @click.prevent="data.user.residentBliiida = true">Je suis
+                résident-e Bliiida</a>
+            <a v-else href="#" @click.prevent="data.user.residentBliiida = false">Je ne suis pas résident-e Bliiida</a>
+        </small>
         <fieldset>
             <label>
                 <small>
@@ -84,6 +91,7 @@ const data = reactive({
         prenom: import.meta.env.VITE_TEST_PRENOM,
         email: import.meta.env.VITE_TEST_EMAIL,
         activite: '',
+        residentBliiida: false,
         datePresence: null
     },
     loading: false,
@@ -160,6 +168,15 @@ function checkUserExists() {
     }, 500);
 }
 function submitForm() {
+    if (data.user.residentBliiida) {
+        const structure = (data.user.activite || '').trim();
+        if (!confirm(`Vous confirmez être actuellement résident-e Bliiida dans la structure "${structure}" ?`)) {
+            // Retour à l'affichage normal du champ
+            data.user.residentBliiida = false;
+            return;
+        }
+        data.user.activite = structure;
+    }
     data.loading = true;
     // cgu.value.setCustomValidity(`Vous devez lire et accepter les conditions d'accès pour continuer.`);
     // if (!data.cgu) {
@@ -179,4 +196,12 @@ function submitForm() {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.resident-bliiida {
+    display: block;
+    font-size: .7rem;
+    line-height: 1.2;
+    margin-top: -.95rem;
+    margin-bottom: 1rem;
+}
+</style>
